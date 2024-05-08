@@ -1,4 +1,4 @@
-import { todoEl } from "../utils/dom-elements";
+import { DOM } from "../utils";
 
 class NewTaskItemFactory {
   createCheckBoxElement() {
@@ -54,7 +54,7 @@ class NewTaskItemFactory {
     taskItemEl.appendChild(divWrapperEl);
     taskItemEl.appendChild(editInputEl);
 
-    todoEl.getElement().appendChild(taskItemEl);
+    DOM.controllers.todoListEl.getElement().appendChild(taskItemEl);
   }
 }
 

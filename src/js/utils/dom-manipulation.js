@@ -1,4 +1,4 @@
-export const mainEl = {
+export const mainElementController = {
   getElement() {
     return document.querySelector(".main");
   },
@@ -10,7 +10,7 @@ export const mainEl = {
   },
 };
 
-export const footerEl = {
+export const footerElementController = {
   getElement() {
     return document.querySelector(".footer");
   },
@@ -22,22 +22,22 @@ export const footerEl = {
   },
 };
 
-export const todoEl = {
+export const todoElementController = {
   getElement() {
     return document.querySelector(".todo-list");
   },
 };
 
-export const taskEl = {
+export const taskElementController = {
   getElement() {
-    return todoEl.getElement().querySelectorAll("li");
+    return todoElementController.getElement().querySelectorAll("li");
   },
   hasElements() {
-    return todoEl.getElement().querySelectorAll("li").length;
+    return todoElementController.getElement().querySelectorAll("li").length;
   },
 };
 
-export const newTodoInputEl = {
+export const newTodoInputElementController = {
   getElement() {
     return document.querySelector(".new-todo");
   },
