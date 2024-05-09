@@ -1,7 +1,6 @@
 import "./css/base.css";
 
 import { sayHello } from "./js/utils";
-let id = 0;
 class Tarea{
     constructor(id, title, completed){
         this.id = id;
@@ -13,10 +12,11 @@ class Tarea{
 let Tareas = [];
 const main = document.querySelector(".main");
 const footer = document.querySelector(".footer");
+const contador = document.querySelector("#contador");
 const li = document.createElement("li");
-const todolist = document.querySelector("#real");
+const todolist = document.querySelector(".todo-list");
 const completed = document.querySelector(".completed");
-const pending = document.querySelector("#pending");
+const pending = document.querySelector("#default");
 const editing = document.querySelector(".editing");
 const input = document.querySelector(".new-todo");
 let destroy = document.querySelectorAll(".destroy");
@@ -35,11 +35,14 @@ input.addEventListener('keypress', function (e) {
 function nuevaTarea(){
     const title = input.value.trim();
     if(title != ""){
-        let NuevaTarea = new Tarea(id.toString(), input.value, false);
+        let NuevaTarea = new Tarea(generarIdUnico(), input.value, false);
         Tareas.push(NuevaTarea);
-        id += 1;
         actualizarTareas();
     }
+}
+
+function generarIdUnico() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
 function actualizarTareas(){
@@ -47,9 +50,11 @@ function actualizarTareas(){
   if(Tareas.length === 0){
     main.classList.add("hidden");
     footer.classList.add("hidden");
+    todolist.classList.add("hidden");
   } else {
     main.classList.remove("hidden");
     footer.classList.remove("hidden");
+    todolist.classList.remove("hidden");
     Tareas.forEach((tarea, index) => {
       let clon;
       if(tarea.completed){
@@ -63,6 +68,7 @@ function actualizarTareas(){
       clon.querySelector(".destroy").setAttribute("data-task-id", tarea.id);
       clon.querySelector(".toggle").setAttribute("data-task-id", tarea.id);
       todolist.appendChild(clon);
+      contador.textContent = contarTareasPendientes();
     });
   }
   destroy = document.querySelectorAll(".destroy");
@@ -76,7 +82,7 @@ function actualizarTareas(){
   toggle = document.querySelectorAll(".toggle");
   toggle.forEach(function(element) {
     element.addEventListener('click', function() {
-      // Obtener el ID de la tarea a eliminar
+      // marcar como completada o desmarcar, tarea.
       const taskId = element.getAttribute("data-task-id");
       toggleTarea(taskId);
     });
@@ -84,12 +90,13 @@ function actualizarTareas(){
   label = document.querySelectorAll("#label");
   label.forEach(function(element) {
     element.addEventListener('dblclick', function() {
-      // Obtener el ID de la tarea a eliminar
+      // Editar Tarea
       const taskId = element.getAttribute("data-task-id");
       console.log(taskId);
       todolist.innerHTML = "";
       let clon = pending.cloneNode(true);
-      clon.querySelector("#label").textContent = Tareas[taskId].title;
+      let indice = encontrarPosicionTareaPorId(taskId);
+      clon.querySelector("#label").textContent = Tareas[indice].title;
       todolist.appendChild(clon);
       clon = editing.cloneNode(true);
       clon.querySelector(".edit").setAttribute("data-task-id", taskId);
@@ -116,10 +123,11 @@ function borrarTarea(taskId){
 }
 
 function toggleTarea(taskId){
-  if(Tareas[taskId].completed){
-    Tareas[taskId].completed = false;
+  let id = encontrarPosicionTareaPorId(taskId);
+  if(Tareas[id].completed){
+    Tareas[id].completed = false;
   }else{
-    Tareas[taskId].completed = true;
+    Tareas[id].completed = true;
   }
   actualizarTareas();
 }
@@ -131,8 +139,8 @@ function agregarEventListenerEdit() {
       if (event.key === "Enter") {
         const taskId = element.getAttribute("data-task-id");
         const newValue = element.value;
-        console.log(taskId, newValue);
-        editarTarea(taskId, newValue);
+        const id = encontrarPosicionTareaPorId(taskId);
+        editarTarea(id, newValue);
       }
     });
   });
@@ -145,3 +153,19 @@ function agregarEventListenerEdit() {
   });
 }
 
+function encontrarPosicionTareaPorId(id) {
+  for (let i = 0; i < Tareas.length; i++) {
+      if (Tareas[i].id === id) {
+          return i;
+      }
+  }
+  return -1; // Devuelve -1 si no se encuentra ninguna tarea con ese ID
+}
+
+function contarTareasPendientes(){
+  let cont = 0;
+  Tareas.forEach((Tareas) => {
+    if(!Tareas.completed) cont++;
+  });
+  return cont;
+}
