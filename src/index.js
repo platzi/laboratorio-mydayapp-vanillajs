@@ -1,6 +1,6 @@
 import "./css/base.css";
-
 import { sayHello } from "./js/utils";
+
 class Tarea{
     constructor(id, title, completed){
         this.id = id;
@@ -9,10 +9,12 @@ class Tarea{
     }
 }
 
+let filtroActual = 'all';
 let Tareas = [];
 const main = document.querySelector(".main");
 const footer = document.querySelector(".footer");
 const contador = document.querySelector("#contador");
+const contadorTexto = document.querySelector(".todo-count");
 const li = document.createElement("li");
 const todolist = document.querySelector(".todo-list");
 const completed = document.querySelector(".completed");
@@ -23,8 +25,39 @@ let destroy = document.querySelectorAll(".destroy");
 let toggle = document.querySelectorAll(".toggle");
 let label = document.querySelectorAll("#label");
 let edit = document.querySelectorAll(".edit");
+const clear = document.querySelector(".clear-completed");
+
+
+
+let tareasFiltradas = [];
+function handleHashChange(){
+    const hash = window.location.hash.slice(1); // Obtiene la parte hash de la URL sin el '#'
+    filtroActual = hash;
+    tareasFiltradas = Tareas; // Mostrar todas las tareas
+    if (hash === 'pending') {
+    tareasFiltradas = Tareas.filter(tarea => !tarea.completed); // Mostrar tareas pendientes
+  } else if (hash === 'completed') {
+    tareasFiltradas = Tareas.filter(tarea => tarea.completed); // Mostrar tareas completadas
+  }
+}
+
+window.addEventListener('hashchange', handleHashChange);
+
+// Función para inicializar la aplicación
+function init() {
+  // Manejar el hash actual en la URL cuando se carga la página
+  handleHashChange();
+}
+
+// Llama a la función init para inicializar la aplicación cuando se carga la página
+init();
 
 actualizarTareas();
+clear.addEventListener("click", function(){
+  let tempArray = Tareas;
+  Tareas = tempArray.filter(x => !x.completed);
+  actualizarTareas();
+});
 
 input.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -35,7 +68,7 @@ input.addEventListener('keypress', function (e) {
 function nuevaTarea(){
     const title = input.value.trim();
     if(title != ""){
-        let NuevaTarea = new Tarea(generarIdUnico(), input.value, false);
+        let NuevaTarea = new Tarea(generarIdUnico(), title, false);
         Tareas.push(NuevaTarea);
         actualizarTareas();
     }
@@ -46,8 +79,9 @@ function generarIdUnico() {
 }
 
 function actualizarTareas(){
+  handleHashChange();
   todolist.innerHTML = "";
-  if(Tareas.length === 0){
+  if(tareasFiltradas.length === 0){
     main.classList.add("hidden");
     footer.classList.add("hidden");
     todolist.classList.add("hidden");
@@ -55,7 +89,7 @@ function actualizarTareas(){
     main.classList.remove("hidden");
     footer.classList.remove("hidden");
     todolist.classList.remove("hidden");
-    Tareas.forEach((tarea, index) => {
+    tareasFiltradas.forEach((tarea, index) => {
       let clon;
       if(tarea.completed){
         clon = completed.cloneNode(true);
@@ -68,7 +102,13 @@ function actualizarTareas(){
       clon.querySelector(".destroy").setAttribute("data-task-id", tarea.id);
       clon.querySelector(".toggle").setAttribute("data-task-id", tarea.id);
       todolist.appendChild(clon);
-      contador.textContent = contarTareasPendientes();
+      let numTareas = contarTareasPendientes();
+      contador.textContent = numTareas;
+      if(numTareas > 1 || numTareas === 0){
+        contadorTexto.lastChild.nodeValue = " items left";
+      }else{
+        contadorTexto.lastChild.nodeValue = " item left";
+      }
     });
   }
   destroy = document.querySelectorAll(".destroy");
@@ -99,6 +139,7 @@ function actualizarTareas(){
       clon.querySelector("#label").textContent = Tareas[indice].title;
       todolist.appendChild(clon);
       clon = editing.cloneNode(true);
+      clon.querySelector(".edit").value = Tareas[indice].title;
       clon.querySelector(".edit").setAttribute("data-task-id", taskId);
       todolist.appendChild(clon);
       clon.querySelector(".edit").focus();
@@ -164,7 +205,7 @@ function encontrarPosicionTareaPorId(id) {
 
 function contarTareasPendientes(){
   let cont = 0;
-  Tareas.forEach((Tareas) => {
+  tareasFiltradas.forEach((Tareas) => {
     if(!Tareas.completed) cont++;
   });
   return cont;
