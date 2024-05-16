@@ -32,13 +32,15 @@ const clear = document.querySelector(".clear-completed");
 let tareasFiltradas = [];
 function handleHashChange(){
     const hash = window.location.hash.slice(1); // Obtiene la parte hash de la URL sin el '#'
+    console.log(hash);
     filtroActual = hash;
     tareasFiltradas = Tareas; // Mostrar todas las tareas
-    if (hash === 'pending') {
+    if (hash === '/pending') {
     tareasFiltradas = Tareas.filter(tarea => !tarea.completed); // Mostrar tareas pendientes
-  } else if (hash === 'completed') {
+  } else if (hash === '/completed') {
     tareasFiltradas = Tareas.filter(tarea => tarea.completed); // Mostrar tareas completadas
   }
+  actualizarTareas();
 }
 
 window.addEventListener('hashchange', handleHashChange);
@@ -56,7 +58,7 @@ actualizarTareas();
 clear.addEventListener("click", function(){
   let tempArray = Tareas;
   Tareas = tempArray.filter(x => !x.completed);
-  actualizarTareas();
+  handleHashChange();
 });
 
 input.addEventListener('keypress', function (e) {
@@ -70,7 +72,7 @@ function nuevaTarea(){
     if(title != ""){
         let NuevaTarea = new Tarea(generarIdUnico(), title, false);
         Tareas.push(NuevaTarea);
-        actualizarTareas();
+        handleHashChange();
     }
 }
 
@@ -79,7 +81,7 @@ function generarIdUnico() {
 }
 
 function actualizarTareas(){
-  handleHashChange();
+  /* handleHashChange(); */
   todolist.innerHTML = "";
   if(tareasFiltradas.length === 0){
     main.classList.add("hidden");
@@ -151,7 +153,7 @@ function actualizarTareas(){
 
 function editarTarea(taskId, newValue){
   Tareas[taskId].title = newValue;
-  actualizarTareas();
+  handleHashChange();
 }
 
 function borrarTarea(taskId){
@@ -159,7 +161,7 @@ function borrarTarea(taskId){
   const index = Tareas.findIndex(tarea => tarea.id === taskId);
   if(index !== -1){
       Tareas.splice(index, 1); // Eliminar la tarea del array
-      actualizarTareas();
+      handleHashChange();
   }
 }
 
@@ -170,7 +172,7 @@ function toggleTarea(taskId){
   }else{
     Tareas[id].completed = true;
   }
-  actualizarTareas();
+    handleHashChange();
 }
 
 function agregarEventListenerEdit() {
@@ -188,7 +190,7 @@ function agregarEventListenerEdit() {
   edits.forEach(function (element) {
     element.addEventListener("keydown", function (event) {
       if (event.key === "Escape") {
-        actualizarTareas();
+        handleHashChange();
       }
     });
   });
