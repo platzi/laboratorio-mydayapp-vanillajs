@@ -9,8 +9,21 @@ class Tarea{
     }
 }
 
+function guardarTareasEnLocalStorage() {
+  localStorage.setItem('Tareas', JSON.stringify(Tareas));
+}
+
+function cargarTareasDesdeLocalStorage() {
+  const tareasGuardadas = localStorage.getItem('Tareas');
+  if (tareasGuardadas) {
+    Tareas = JSON.parse(tareasGuardadas);
+  }
+}
+
+
 let filtroActual = 'all';
 let Tareas = [];
+cargarTareasDesdeLocalStorage();
 const main = document.querySelector(".main");
 const footer = document.querySelector(".footer");
 const contador = document.querySelector("#contador");
@@ -40,6 +53,7 @@ function handleHashChange(){
   } else if (hash === '/completed') {
     tareasFiltradas = Tareas.filter(tarea => tarea.completed); // Mostrar tareas completadas
   }
+  guardarTareasEnLocalStorage();
   actualizarTareas();
 }
 
