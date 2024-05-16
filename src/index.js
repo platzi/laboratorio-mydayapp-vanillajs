@@ -10,11 +10,11 @@ class Tarea{
 }
 
 function guardarTareasEnLocalStorage() {
-  localStorage.setItem('Tareas', JSON.stringify(Tareas));
+  localStorage.setItem('mydayapp-js', JSON.stringify(Tareas));
 }
 
 function cargarTareasDesdeLocalStorage() {
-  const tareasGuardadas = localStorage.getItem('Tareas');
+  const tareasGuardadas = localStorage.getItem('mydayapp-js');
   if (tareasGuardadas) {
     Tareas = JSON.parse(tareasGuardadas);
   }
