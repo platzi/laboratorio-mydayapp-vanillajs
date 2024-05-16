@@ -39,19 +39,36 @@ let toggle = document.querySelectorAll(".toggle");
 let label = document.querySelectorAll("#label");
 let edit = document.querySelectorAll(".edit");
 const clear = document.querySelector(".clear-completed");
+const Ball = document.querySelector("#all");
+const Bpending = document.querySelector("#pending");
+const Bcompleted = document.querySelector("#completed");
 
 
 
 let tareasFiltradas = [];
 function handleHashChange(){
     const hash = window.location.hash.slice(1); // Obtiene la parte hash de la URL sin el '#'
-    console.log(hash);
     filtroActual = hash;
     tareasFiltradas = Tareas; // Mostrar todas las tareas
     if (hash === '/pending') {
     tareasFiltradas = Tareas.filter(tarea => !tarea.completed); // Mostrar tareas pendientes
+    Bpending.classList.add("selected");
+    Ball.classList.remove("selected");
+    Bcompleted.classList.remove("selected");
   } else if (hash === '/completed') {
     tareasFiltradas = Tareas.filter(tarea => tarea.completed); // Mostrar tareas completadas
+    Bpending.classList.remove("selected");
+    Ball.classList.remove("selected");
+    Bcompleted.classList.add("selected");
+  }else{
+    Bpending.classList.remove("selected");
+    Ball.classList.add("selected");
+    Bcompleted.classList.remove("selected");
+  }
+  if(tareasFiltradas.some(tarea => tarea.completed)){
+    clear.classList.remove('hidden');
+  }else{
+    clear.classList.add('hidden');
   }
   guardarTareasEnLocalStorage();
   actualizarTareas();
@@ -166,6 +183,7 @@ function actualizarTareas(){
 }
 
 function editarTarea(taskId, newValue){
+  newValue = newValue.trim();
   Tareas[taskId].title = newValue;
   handleHashChange();
 }
