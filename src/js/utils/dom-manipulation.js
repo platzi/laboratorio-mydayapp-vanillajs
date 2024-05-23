@@ -35,6 +35,21 @@ export const taskElementController = {
   hasElements() {
     return todoElementController.getElement().querySelectorAll("li").length;
   },
+  getPendingElements() {
+    const pendingEls = [];
+    todoElementController
+      .getElement()
+      .querySelectorAll("li")
+      .forEach((el) => {
+        if (
+          el.getAttribute("class") !== "completed" ||
+          !el.getAttribute("class")
+        ) {
+          pendingEls.push(el);
+        }
+      });
+    return pendingEls;
+  },
 };
 
 export const newTodoInputElementController = {

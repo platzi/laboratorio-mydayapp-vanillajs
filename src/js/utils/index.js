@@ -5,7 +5,7 @@ import {
   newTodoInputElementController,
   todoElementController,
 } from "./dom-manipulation";
-import { existTasksInTodoList } from "./utils";
+import { existTasksInTodoList, refreshItemsLength } from "./utils";
 
 export const DOM = {
   controllers: {
@@ -17,4 +17,4 @@ export const DOM = {
   },
 };
 
-export const watchers = { existTasksInTodoList };
+export const watcher = { existTasksInTodoList, refreshItemsLength };
