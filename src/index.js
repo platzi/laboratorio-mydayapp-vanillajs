@@ -13,7 +13,7 @@ window.onload = () => {
 };
 
 todoInput.onkeypress = (e) => {
-  if (e.code !== "Enter") {
+  if (e.key !== "Enter") {
     return;
   }
 
