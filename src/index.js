@@ -40,16 +40,16 @@ function addTask(task) {
     completed: false,
   });
 
-  updateTodoList();
+  updateTodoListView();
 }
 
 function removeTask(task) {
   let taskIndex = tasks.findIndex((t) => t.id === task.id);
   tasks.splice(taskIndex, 1);
-  updateTodoList();
+  updateTodoListView();
 }
 
-function updateTodoList() {
+function updateTodoListView() {
   // clear todo-list element
   todoList.textContent = ``;
 
