@@ -82,6 +82,7 @@ function updateTodoList() {
 
     const label = document.createElement("label");
     label.textContent = task.title;
+    label.ondblclick = () => enterEditing(li);
 
     const button = document.createElement("button");
     button.onclick = () => removeTask(task);
@@ -93,6 +94,7 @@ function updateTodoList() {
 
     const editInput = document.createElement("input");
     editInput.value = task.title;
+    editInput.onkeydown = (e) => exitEditing(e, li, task);
     editInput.classList.add("edit");
 
     li.appendChild(div);
@@ -112,4 +114,30 @@ function handleCheckBoxChange(checkBox, liElement, task) {
   }
 
   task.completed = checkBox.checked;
+}
+
+function enterEditing(taskElement) {
+  taskElement.classList.add("editing");
+  const editInput = taskElement.querySelector(".edit");
+  editInput.focus();
+}
+
+function exitEditing(event, taskElement, task) {
+  const label = taskElement.querySelector("label");
+
+  switch (event.key) {
+    case "Enter":
+      // save changes
+      label.textContent = event.target.value.trim();
+      task.title = event.target.value.trim();
+      break;
+    case "Escape":
+      // discard changes
+      event.target.value = task.title;
+      break;
+    default:
+      return;
+  }
+
+  taskElement.classList.remove("editing");
 }
