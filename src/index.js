@@ -8,9 +8,10 @@ const todoList = document.querySelector(".todo-list");
 const todoCount = document.querySelector(".todo-count");
 const clearCompletedButton = document.querySelector(".clear-completed");
 
-const tasks = [];
+let tasks = getTasksFromLocalStorage();
 
 window.onload = () => {
+  updateTodoListView();
   toggleMainAndFooterView();
 };
 
@@ -22,6 +23,16 @@ todoInput.onkeypress = (e) => {
   addTask(e.target.value);
   e.target.value = "";
 };
+
+function getTasksFromLocalStorage() {
+  const tasks = JSON.parse(localStorage.getItem("mydayapp-js"));
+  return Array.isArray(tasks) ? tasks : [];
+}
+
+function saveTasksToLocalStorage() {
+  localStorage.setItem("mydayapp-js", JSON.stringify(tasks));
+  updateTodoListView();
+}
 
 function toggleMainAndFooterView() {
   // hides the main and footer sections if the list is empty
@@ -42,13 +53,13 @@ function addTask(task) {
     completed: false,
   });
 
-  updateTodoListView();
+  saveTasksToLocalStorage();
 }
 
 function removeTask(task) {
   let taskIndex = tasks.findIndex((t) => t.id === task.id);
   tasks.splice(taskIndex, 1);
-  updateTodoListView();
+  saveTasksToLocalStorage();
 }
 
 function updateTodoListView() {
@@ -143,7 +154,7 @@ function handleCheckBoxChange(checkBox, liElement, task) {
   }
 
   task.completed = checkBox.checked;
-  updatePendingCount();
+  saveTasksToLocalStorage();
 }
 
 function enterEditing(taskElement) {
@@ -160,6 +171,7 @@ function exitEditing(event, taskElement, task) {
       // save changes
       label.textContent = event.target.value.trim();
       task.title = event.target.value.trim();
+      saveTasksToLocalStorage();
       break;
     case "Escape":
       // discard changes
