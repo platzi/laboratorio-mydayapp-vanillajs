@@ -71,6 +71,7 @@ function updateTodoList() {
     const checkBox = document.createElement("input");
     checkBox.type = "checkbox";
     checkBox.checked = task.completed;
+    checkBox.onchange = () => handleCheckBoxChange(checkBox, li, task);
     checkBox.classList.add("toggle");
 
     const label = document.createElement("label");
@@ -94,4 +95,14 @@ function updateTodoList() {
   });
 
   toggleMainAndFooterView();
+}
+
+function handleCheckBoxChange(checkBox, liElement, task) {
+  if (checkBox.checked) {
+    liElement.classList.add("completed");
+  } else {
+    liElement.classList.remove("completed");
+  }
+
+  task.completed = checkBox.checked;
 }
