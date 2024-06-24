@@ -1,5 +1,14 @@
 import "./css/base.css";
 
-import { sayHello } from "./js/utils";
+// DOM elements
+const mainElement = document.querySelector(".main");
+const footerElement = document.querySelector(".footer");
 
-console.log(sayHello("Hello"));
+const tasks = [];
+
+window.onload = () => {
+  if (tasks === null || tasks.length === 0) {
+    mainElement.hidden = true;
+    footerElement.hidden = true;
+  }
+};
