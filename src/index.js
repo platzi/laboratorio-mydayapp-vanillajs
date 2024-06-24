@@ -43,6 +43,12 @@ function addTask(task) {
   updateTodoList();
 }
 
+function removeTask(task) {
+  let taskIndex = tasks.findIndex((t) => t.id === task.id);
+  tasks.splice(taskIndex, 1);
+  updateTodoList();
+}
+
 function updateTodoList() {
   // clear todo-list element
   todoList.textContent = ``;
@@ -78,6 +84,7 @@ function updateTodoList() {
     label.textContent = task.title;
 
     const button = document.createElement("button");
+    button.onclick = () => removeTask(task);
     button.classList.add("destroy");
 
     div.appendChild(checkBox);
