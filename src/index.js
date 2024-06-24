@@ -6,6 +6,7 @@ const footerElement = document.querySelector(".footer");
 const todoInput = document.querySelector(".new-todo");
 const todoList = document.querySelector(".todo-list");
 const todoCount = document.querySelector(".todo-count");
+const clearCompletedButton = document.querySelector(".clear-completed");
 
 const tasks = [];
 
@@ -109,11 +110,17 @@ function updateTodoListView() {
 }
 
 function updatePendingCount() {
+  clearCompletedButton.hidden = true;
+
   let pendingTasks = 0;
   for (let task of tasks) {
     if (task.completed === false) {
       pendingTasks++;
+      continue;
     }
+
+    // enable clear-completed button if there is at least one completed task
+    clearCompletedButton.hidden = false;
   }
 
   todoCount.textContent = "";
