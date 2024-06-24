@@ -24,6 +24,8 @@ todoInput.onkeypress = (e) => {
   e.target.value = "";
 };
 
+clearCompletedButton.onclick = clearCompletedTasks;
+
 function getTasksFromLocalStorage() {
   const tasks = JSON.parse(localStorage.getItem("mydayapp-js"));
   return Array.isArray(tasks) ? tasks : [];
@@ -182,4 +184,9 @@ function exitEditing(event, taskElement, task) {
   }
 
   taskElement.classList.remove("editing");
+}
+
+function clearCompletedTasks() {
+  tasks = tasks.filter((task) => !task.completed);
+  saveTasksToLocalStorage();
 }
