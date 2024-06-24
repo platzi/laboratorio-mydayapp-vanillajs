@@ -9,10 +9,7 @@ const todoList = document.querySelector(".todo-list");
 const tasks = [];
 
 window.onload = () => {
-  if (tasks === null || tasks.length === 0) {
-    mainElement.hidden = true;
-    footerElement.hidden = true;
-  }
+  toggleMainAndFooterView();
 };
 
 todoInput.onkeypress = (e) => {
@@ -23,6 +20,13 @@ todoInput.onkeypress = (e) => {
   addTask(e.target.value);
   e.target.value = "";
 };
+
+function toggleMainAndFooterView() {
+  // hides the main and footer sections if the list is empty
+  const tasksEmpty = tasks === null || tasks.length === 0;
+  mainElement.hidden = tasksEmpty;
+  footerElement.hidden = tasksEmpty;
+}
 
 function addTask(task) {
   // make sure the string isn't empty
@@ -89,7 +93,5 @@ function updateTodoList() {
     todoList.appendChild(li);
   });
 
-  const tasksEmpty = tasks === null || tasks.length === 0;
-  mainElement.hidden = tasksEmpty;
-  footerElement.hidden = tasksEmpty;
+  toggleMainAndFooterView();
 }
