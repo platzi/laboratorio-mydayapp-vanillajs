@@ -5,6 +5,7 @@ const mainElement = document.querySelector(".main");
 const footerElement = document.querySelector(".footer");
 const todoInput = document.querySelector(".new-todo");
 const todoList = document.querySelector(".todo-list");
+const todoCount = document.querySelector(".todo-count");
 
 const tasks = [];
 
@@ -104,6 +105,27 @@ function updateTodoListView() {
   });
 
   toggleMainAndFooterView();
+  updatePendingCount();
+}
+
+function updatePendingCount() {
+  let pendingTasks = 0;
+  for (let task of tasks) {
+    if (task.completed === false) {
+      pendingTasks++;
+    }
+  }
+
+  todoCount.textContent = "";
+
+  const strongNumber = document.createElement("strong");
+  strongNumber.textContent = pendingTasks;
+  const textNode = document.createTextNode(
+    pendingTasks === 1 ? " item left" : " items left"
+  );
+
+  todoCount.appendChild(strongNumber);
+  todoCount.appendChild(textNode);
 }
 
 function handleCheckBoxChange(checkBox, liElement, task) {
@@ -114,6 +136,7 @@ function handleCheckBoxChange(checkBox, liElement, task) {
   }
 
   task.completed = checkBox.checked;
+  updatePendingCount();
 }
 
 function enterEditing(taskElement) {
