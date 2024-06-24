@@ -146,11 +146,11 @@ function updatePendingCount() {
   todoCount.appendChild(textNode);
 }
 
-function handleCheckBoxChange(checkBox, liElement, task) {
+function handleCheckBoxChange(checkBox, taskElement, task) {
   if (checkBox.checked) {
-    liElement.classList.add("completed");
+    taskElement.classList.add("completed");
   } else {
-    liElement.classList.remove("completed");
+    taskElement.classList.remove("completed");
   }
 
   task.completed = checkBox.checked;
