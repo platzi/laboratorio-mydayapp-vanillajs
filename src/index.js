@@ -7,12 +7,17 @@ const todoInput = document.querySelector(".new-todo");
 const todoList = document.querySelector(".todo-list");
 const todoCount = document.querySelector(".todo-count");
 const clearCompletedButton = document.querySelector(".clear-completed");
+const filterAnchors = document.querySelectorAll(".filters a");
 
 let tasks = getTasksFromLocalStorage();
 
 window.onload = () => {
   updateTodoListView();
   toggleMainAndFooterView();
+};
+
+window.onpopstate = () => {
+  updateTodoListView();
 };
 
 todoInput.onkeypress = (e) => {
@@ -23,6 +28,10 @@ todoInput.onkeypress = (e) => {
   addTask(e.target.value);
   e.target.value = "";
 };
+
+filterAnchors.forEach((element) => {
+  element.onclick = handleFilterClick;
+});
 
 clearCompletedButton.onclick = clearCompletedTasks;
 
@@ -68,7 +77,19 @@ function updateTodoListView() {
   // clear todo-list element
   todoList.textContent = ``;
 
-  tasks.forEach((task) => {
+  // get filter from route
+  const filter = window.location.href.substring(
+    window.location.href.lastIndexOf("/") + 1
+  );
+
+  let filteredTasks = tasks;
+  if (filter === "pending") {
+    filteredTasks = tasks.filter((task) => !task.completed);
+  } else if (filter === "completed") {
+    filteredTasks = tasks.filter((task) => task.completed);
+  }
+
+  filteredTasks.forEach((task) => {
     // EXAMPLE
     //
     // <li data-task-id="1">
@@ -120,6 +141,17 @@ function updateTodoListView() {
 
   toggleMainAndFooterView();
   updatePendingCount();
+}
+
+function updateFilterList() {
+  filterAnchors.forEach((element) => {
+    if (element.href === window.location.href) {
+      element.classList.add("selected");
+      return;
+    }
+
+    element.classList.remove("selected");
+  });
 }
 
 function updatePendingCount() {
@@ -189,4 +221,10 @@ function exitEditing(event, taskElement, task) {
 function clearCompletedTasks() {
   tasks = tasks.filter((task) => !task.completed);
   saveTasksToLocalStorage();
+}
+
+function handleFilterClick(event) {
+  event.preventDefault();
+  window.history.pushState({}, "", event.target.href);
+  updateTodoListView();
 }
