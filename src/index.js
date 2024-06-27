@@ -139,13 +139,21 @@ function updateTodoListView() {
     todoList.appendChild(li);
   });
 
+  updateFilterList(filter);
   toggleMainAndFooterView();
   updatePendingCount();
 }
 
-function updateFilterList() {
+function updateFilterList(filterName) {
+  const compareText =
+    filterName === "pending" || filterName === "completed" ? filterName : "";
+
   filterAnchors.forEach((element) => {
-    if (element.href === window.location.href) {
+    const elementFilter = element.href.substring(
+      element.href.lastIndexOf("/") + 1
+    );
+
+    if (elementFilter === compareText) {
       element.classList.add("selected");
       return;
     }
