@@ -55,13 +55,11 @@ const view = (toDoList, tasks, task, index, clearButton) => {
     if (toogleTask.checked) {
       taskElement.setAttribute('class', 'completed')
       newTasks[index].completed = true
-      newTasks[index].pending = false
       localStorage.setItem('mydayapp-js', JSON.stringify(newTasks))
       checkCompleted(newTasks, clearButton)
     } else {
       taskElement.setAttribute('class', '')
       newTasks[index].completed = false
-      newTasks[index].pending = true
       console.log(newTasks[index])
       localStorage.setItem('mydayapp-js', JSON.stringify(newTasks))
       checkCompleted(newTasks, clearButton)
@@ -106,7 +104,7 @@ export const add = (newTask, toDoList, toDoCount, clearButton) => {
       const newTaskValue = newTask.value.trim()
       if (newTaskValue != '') {
 
-        const task = { pending: true, completed: false, title: newTaskValue }
+        const task = { completed: false, title: newTaskValue }
 
         const tasks = JSON.parse(localStorage.getItem('mydayapp-js'))
         tasks.push(task)
@@ -144,7 +142,7 @@ export const write = (toDoList, toDoCount, rute, clearButton) => {
       checkCompleted(tasks, clearButton)
       break;
     case '#/pending':
-      const pendingTasks = tasks.filter((task) => task.pending === true)
+      const pendingTasks = tasks.filter((task) => task.completed === false)
       pendingTasks.forEach(task => {
         const index = pendingTasks.indexOf(task)
         view(toDoList, pendingTasks, task, index, clearButton)
@@ -177,7 +175,7 @@ export const clear = (toDoList, toDoCount, clearButton) => {
 
     const tasks = JSON.parse(localStorage.getItem('mydayapp-js'))
 
-    const pendingTasks = tasks.filter((task) => task.pending == true)
+    const pendingTasks = tasks.filter((task) => task.completed == false)
     localStorage.setItem('mydayapp-js', JSON.stringify(pendingTasks))
 
     const completedTasks = document.getElementsByClassName('completed')
