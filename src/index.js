@@ -1,5 +1,11 @@
 import "./css/base.css";
+import MainLayout from "./js/main-layout";
 
-import { sayHello } from "./js/utils";
+(function main() {
+  const mainElement = document.querySelector("#main");
+  const footerElement = document.querySelector("#footer");
 
-console.log(sayHello("Hello"));
+  const mainLayout = new MainLayout(mainElement, footerElement);
+
+  mainLayout.hide();
+})();
