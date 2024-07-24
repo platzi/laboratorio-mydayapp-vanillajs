@@ -26,9 +26,10 @@ export default class TodosService {
 
   notify() {
     const filteredTodos = filterTodos(this.#todos, this.#filter);
+    const filtered = { filter: this.#filter, todos: filteredTodos };
 
     this.#observers.forEach((observer) =>
-      observer.update(this.#todos, filteredTodos)
+      observer.update(this.#todos, filtered)
     );
   }
 

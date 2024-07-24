@@ -17,6 +17,7 @@ import Todos from "./js/services/todos/todos";
   const todoListElement = document.querySelector(".todo-list");
   const todoCounterElement = document.querySelector(".todo-count");
   const clearCompletedElement = document.querySelector(".clear-completed");
+  const filterElements = document.querySelectorAll(".filters a");
 
   const mainLayout = new MainLayout(mainElement, footerElement);
   const storeService = new StoreService();
@@ -30,6 +31,7 @@ import Todos from "./js/services/todos/todos";
     .counter(counterContainer)
     .store(storeService)
     .clearComplete(clearCompletedElement)
+    .filters(filterElements)
     .build();
   const inputService = new InputService();
   const todos = storeService.load(STORE_KEY) || [];
@@ -46,4 +48,5 @@ import Todos from "./js/services/todos/todos";
   });
 
   hashService.register();
+  hashService.check();
 })();

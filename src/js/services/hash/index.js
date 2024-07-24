@@ -19,4 +19,12 @@ export default class HashService {
       this.#todoService.changeFilter(hash);
     });
   }
+
+  check() {
+    const hash = this.#getHash();
+
+    if (hash) {
+      this.#todoService.changeFilter(hash);
+    }
+  }
 }

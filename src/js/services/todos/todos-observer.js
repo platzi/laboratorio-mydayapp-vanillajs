@@ -6,16 +6,43 @@ export default class TodosObserver {
   #counter = null;
   #storeService = null;
   #clearComplete = null;
+  #filters = null;
 
-  constructor(layout, container, counter, storeService, clearComplete) {
+  constructor(
+    layout,
+    container,
+    counter,
+    storeService,
+    clearComplete,
+    filters
+  ) {
     this.#layout = layout;
     this.#container = container;
     this.#counter = counter;
     this.#storeService = storeService;
     this.#clearComplete = clearComplete;
+    this.#filters = filters;
   }
 
-  update(todos, filteredTodos) {
+  #handleClearCompleted(todos) {
+    if (!todos.some((todo) => todo.completed)) {
+      this.#clearComplete.classList.add("hidden");
+    } else {
+      this.#clearComplete.classList.remove("hidden");
+    }
+  }
+
+  #handleFilter(filter) {
+    this.#filters.forEach((filterElement) => {
+      if (filterElement.hash === `#/${filter}`) {
+        filterElement.classList.add("selected");
+      } else {
+        filterElement.classList.remove("selected");
+      }
+    });
+  }
+
+  update(todos, filtered) {
     if (!this.#layout) {
       throw new Error("Main layout is required");
     }
@@ -25,14 +52,11 @@ export default class TodosObserver {
       return this.#layout.hide();
     }
 
-    if (!todos.some((todo) => todo.completed)) {
-      this.#clearComplete.classList.add("hidden");
-    } else {
-      this.#clearComplete.classList.remove("hidden");
-    }
+    this.#handleClearCompleted(todos);
+    this.#handleFilter(filtered.filter);
 
     this.#layout.show();
-    this.#container.render(filteredTodos);
+    this.#container.render(filtered.todos);
     this.#counter.render(todos.filter((todo) => !todo.completed).length);
     this.#storeService.save(STORE_KEY, todos);
   }

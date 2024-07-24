@@ -6,6 +6,7 @@ export default class Todos {
   #counter = null;
   #storeService = null;
   #clearComplete = null;
+  #filterElements = null;
 
   layout(layout) {
     this.#layout = layout;
@@ -37,6 +38,12 @@ export default class Todos {
     return this;
   }
 
+  filters(filterElements) {
+    this.#filterElements = filterElements;
+
+    return this;
+  }
+
   build() {
     if (!this.#layout) {
       throw new Error("Main layout is required");
@@ -54,12 +61,21 @@ export default class Todos {
       throw new Error("Store service is required");
     }
 
+    if (!this.#clearComplete) {
+      throw new Error("Clear complete element is required");
+    }
+
+    if (!this.#filterElements) {
+      throw new Error("Filter element is required");
+    }
+
     return new TodosObserver(
       this.#layout,
       this.#container,
       this.#counter,
       this.#storeService,
-      this.#clearComplete
+      this.#clearComplete,
+      this.#filterElements
     );
   }
 }
