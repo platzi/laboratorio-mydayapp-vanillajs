@@ -5,6 +5,7 @@ export default class Todos {
   #container = null;
   #counter = null;
   #storeService = null;
+  #clearComplete = null;
 
   layout(layout) {
     this.#layout = layout;
@@ -30,6 +31,12 @@ export default class Todos {
     return this;
   }
 
+  clearComplete(clearComplete) {
+    this.#clearComplete = clearComplete;
+
+    return this;
+  }
+
   build() {
     if (!this.#layout) {
       throw new Error("Main layout is required");
@@ -51,7 +58,8 @@ export default class Todos {
       this.#layout,
       this.#container,
       this.#counter,
-      this.#storeService
+      this.#storeService,
+      this.#clearComplete
     );
   }
 }

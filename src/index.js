@@ -29,6 +29,7 @@ import Todos from "./js/services/todos/todos";
     .container(todosContainer)
     .counter(counterContainer)
     .store(storeService)
+    .clearComplete(clearCompletedElement)
     .build();
   const inputService = new InputService();
   const todos = storeService.load(STORE_KEY) || [];
