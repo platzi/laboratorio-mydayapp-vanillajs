@@ -1,1 +1,1 @@
-export const STORE_KEY = "todos";
+export const STORE_KEY = "mydayapp-js";
