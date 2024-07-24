@@ -1,25 +1,31 @@
-import { renderTodos } from "../../utils";
+import { STORE_KEY } from "../../constants/store";
 
 export default class TodosObserver {
   #layout = null;
-  #elements = null;
+  #container = null;
+  #counter = null;
+  #storeService = null;
 
-  constructor(layout, elements) {
+  constructor(layout, container, counter, storeService) {
     this.#layout = layout;
-    this.#elements = elements;
+    this.#container = container;
+    this.#counter = counter;
+    this.#storeService = storeService;
   }
 
-  update(todos) {
+  update(todos, filteredTodos) {
     if (!this.#layout) {
       throw new Error("Main layout is required");
     }
 
     if (!todos?.length) {
-      this.#layout.hide();
+      this.#storeService.remove(STORE_KEY);
+      return this.#layout.hide();
     }
 
     this.#layout.show();
-    this.#elements.innerHTML = renderTodos(todos);
-    // TODO: Save todos to local storage
+    this.#container.render(filteredTodos);
+    this.#counter.render(todos.filter((todo) => !todo.completed).length);
+    this.#storeService.save(STORE_KEY, todos);
   }
 }

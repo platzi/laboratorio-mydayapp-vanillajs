@@ -22,3 +22,19 @@ export function renderTodos(todos) {
     })
     .join("");
 }
+
+export function filterTodos(todos, filter) {
+  return todos.filter((todo) => {
+    if (!filter) {
+      return true;
+    }
+
+    if (filter === "completed") {
+      return todo.completed;
+    }
+
+    if (filter === "pending") {
+      return !todo.completed;
+    }
+  });
+}

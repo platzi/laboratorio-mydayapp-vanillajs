@@ -1,5 +1,8 @@
+import { filterTodos } from "../../utils";
+
 export default class TodosService {
   #todos = [];
+  #filter = "";
   #observers = [];
 
   constructor(todos = []) {
@@ -22,16 +25,28 @@ export default class TodosService {
   }
 
   notify() {
-    this.#observers.forEach((observer) => observer.update(this.#todos));
+    const filteredTodos = filterTodos(this.#todos, this.#filter);
+
+    this.#observers.forEach((observer) =>
+      observer.update(this.#todos, filteredTodos)
+    );
   }
 
   add(todo) {
-    // Every todo must have an id: string, title: string, completed: boolean
     if (!todo) {
       throw new Error("Todo is required");
     }
 
     this.#todos.push(todo);
+    this.notify();
+  }
+
+  set(todos) {
+    if (!Array.isArray(todos)) {
+      throw new Error("Todos must be an array");
+    }
+
+    this.#todos = todos;
     this.notify();
   }
 
@@ -49,7 +64,36 @@ export default class TodosService {
     this.notify();
   }
 
+  update(todoId, data) {
+    if (!todoId) {
+      throw new Error("Todo ID is required");
+    }
+
+    const todoIndex = this.#todos.findIndex((todo) => todo.id === todoId);
+    if (todoIndex === -1) {
+      throw new Error("Todo not found");
+    }
+
+    this.#todos[todoIndex] = {
+      ...this.#todos[todoIndex],
+      ...data,
+    };
+
+    this.notify();
+  }
+
+  clearCompleted() {
+    const pendingTodos = this.#todos.filter((todo) => !todo.completed);
+    this.set(pendingTodos);
+  }
+
   get todos() {
     return this.#todos;
+  }
+
+  changeFilter(filter) {
+    this.#filter = filter;
+
+    this.notify();
   }
 }

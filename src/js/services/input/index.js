@@ -7,7 +7,7 @@ export default class InputService {
     return this;
   }
 
-  onKeypress(callback = function () {}) {
+  onEnter(callback = function () {}) {
     if (!this.#input) {
       throw new Error("Input element is required");
     }
@@ -21,6 +21,22 @@ export default class InputService {
 
       callback?.(value);
       event.target.value = "";
+    });
+
+    return this;
+  }
+
+  onEscape(callback = function () {}) {
+    if (!this.#input) {
+      throw new Error("Input element is required");
+    }
+
+    this.#input.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") {
+        return;
+      }
+
+      callback?.();
     });
 
     return this;
