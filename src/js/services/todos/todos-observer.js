@@ -1,8 +1,12 @@
+import { renderTodos } from "../../utils";
+
 export default class TodosObserver {
   #layout = null;
+  #elements = null;
 
-  constructor(layout) {
+  constructor(layout, elements) {
     this.#layout = layout;
+    this.#elements = elements;
   }
 
   update(todos) {
@@ -15,6 +19,7 @@ export default class TodosObserver {
     }
 
     this.#layout.show();
+    this.#elements.innerHTML = renderTodos(todos);
     // TODO: Save todos to local storage
   }
 }
