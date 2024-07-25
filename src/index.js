@@ -9,41 +9,34 @@ import StoreService from "./js/services/store";
 import TodosService from "./js/services/todos";
 import Todo from "./js/services/todos/todo";
 import Todos from "./js/services/todos/todos";
+import elements from "./js/services/elements";
 
 (function main() {
-  const mainElement = document.querySelector("#main");
-  const footerElement = document.querySelector("#footer");
-  const inputElement = document.querySelector(".new-todo");
-  const todoListElement = document.querySelector(".todo-list");
-  const todoCounterElement = document.querySelector(".todo-count");
-  const clearCompletedElement = document.querySelector(".clear-completed");
-  const filterElements = document.querySelectorAll(".filters a");
-
-  const mainLayout = new MainLayout(mainElement, footerElement);
+  const mainLayout = new MainLayout(elements.main, elements.footer);
   const storeService = new StoreService();
   const todosService = new TodosService([]);
   const hashService = new HashService(todosService);
-  const todosContainer = new TodosContainer(todosService, todoListElement);
-  const counterContainer = new TodosConuterContainer(todoCounterElement);
+  const todosContainer = new TodosContainer(todosService, elements.todoList);
+  const counterContainer = new TodosConuterContainer(elements.todoCounter);
   const todosObserver = new Todos()
     .layout(mainLayout)
     .container(todosContainer)
     .counter(counterContainer)
     .store(storeService)
-    .clearComplete(clearCompletedElement)
-    .filters(filterElements)
+    .clearComplete(elements.clearCompleted)
+    .filters(elements.filters)
     .build();
   const inputService = new InputService();
   const todos = storeService.load(STORE_KEY) || [];
 
   todosService.subscribe(todosObserver);
   todosService.set(todos);
-  inputService.register(inputElement).onEnter((title) => {
+  inputService.register(elements.input).onEnter((title) => {
     const todo = new Todo().id().title(title).completed(false).build();
     todosService.add(todo);
   });
 
-  clearCompletedElement.addEventListener("click", () => {
+  elements.clearCompleted.addEventListener("click", () => {
     todosService.clearCompleted();
   });
 
